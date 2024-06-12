@@ -82,7 +82,12 @@ jobs:
         with:
           checkName: Merge Trivy results
           token: ${{ secrets.GITHUB_TOKEN }}
-          timeoutSeconds: 1800
+          # This workflow does not trigger a build, instead it relies on that a successful build
+          # exists for this commit. If triggering this workflow just after a new commit has been
+          # uploaded we will need to wait for the "Merge Trivy results" to finish
+          # Building the default C++ App on Github may take long time, 70 minutes observed
+          # Setting limit to 100 minutes to have some margin
+          timeoutSeconds: 6000
           intervalSeconds: 20
 
       - name: Download builds from Build multiarch image workflow artifacts
