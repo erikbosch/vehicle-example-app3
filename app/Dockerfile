@@ -14,7 +14,7 @@
 
 # syntax = docker/dockerfile:1.2
 
-FROM ghcr.io/eclipse-velocitas/devcontainer-base-images/cpp:v0.3 as builder
+FROM --platform=$TARGETPLATFORM ghcr.io/eclipse-velocitas/devcontainer-base-images/cpp:v0.3 as builder
 
 COPY . /workspace
 
@@ -27,7 +27,7 @@ RUN velocitas init -f -v && \
     ./build.sh -r -t app --static
 
 # Runner stage, to copy the executable
-FROM scratch as runner
+FROM --platform=$TARGETPLATFORM gcr.io/distroless/base-debian12 as runner
 
 COPY --from=builder /workspace/build/bin/app /app
 
